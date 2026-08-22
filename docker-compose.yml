@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: rio_postgres
+    environment:
+      POSTGRES_DB: rio_dev
+      POSTGRES_USER: rio
+      POSTGRES_PASSWORD: rio_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - rio_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rio -d rio_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  rio_pgdata:

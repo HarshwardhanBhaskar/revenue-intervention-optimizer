@@ -1,0 +1,287 @@
+/* RIO — Financial Editorial Intelligence Design System */
+/* Warm Alabaster × Restrained Gold × Bloomberg Terminal Precision */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap');
+
+:root {
+  /* Surfaces — Warm Alabaster & Editorial Tonalities */
+  --color-bg: #F9F8F6;
+  --color-surface: #FFFFFF;
+  --color-surface-2: #F3F1EC;
+  --color-surface-hover: #ECE8E1;
+  --color-surface-elevated: #FFFFFF;
+  
+  /* Borders & Gridlines */
+  --color-border: #E5E1D8;
+  --color-border-subtle: #EDEAE2;
+  --color-border-strong: #C8C2B5;
+
+  /* Typography */
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #5C5852;
+  --color-text-muted: #8C867C;
+  --color-text-dim: #B5AFA4;
+
+  /* Accent — Restrained Gold */
+  --color-gold: #C29B27;
+  --color-gold-hover: #AF8A1E;
+  --color-gold-bg: rgba(194, 155, 39, 0.08);
+  --color-gold-border: rgba(194, 155, 39, 0.28);
+  --color-gold-text: #967412;
+
+  /* Semantic Financial Colors */
+  --color-recovery: #1E824C;
+  --color-recovery-bg: rgba(30, 130, 76, 0.08);
+  --color-recovery-border: rgba(30, 130, 76, 0.25);
+
+  --color-risk: #C0392B;
+  --color-risk-bg: rgba(192, 57, 43, 0.08);
+  --color-risk-border: rgba(192, 57, 43, 0.25);
+
+  --color-warning: #D35400;
+  --color-warning-bg: rgba(211, 84, 0, 0.08);
+  --color-warning-border: rgba(211, 84, 0, 0.25);
+
+  --color-info: #2980B9;
+  --color-info-bg: rgba(41, 128, 185, 0.08);
+  --color-info-border: rgba(41, 128, 185, 0.25);
+
+  /* Fonts */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Shadows */
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  --shadow-elevated: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 1px var(--color-gold);
+}
+
+/* Editorial Typography */
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Architectural Financial Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 12.5px;
+}
+
+th {
+  background-color: var(--color-surface-2);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
+}
+
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-primary);
+  vertical-align: middle;
+}
+
+tr:hover td {
+  background-color: var(--color-surface-hover);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+}
+
+.badge-gold {
+  background-color: var(--color-gold-bg);
+  color: var(--color-gold-text);
+  border: 1px solid var(--color-gold-border);
+}
+
+.badge-recovery {
+  background-color: var(--color-recovery-bg);
+  color: var(--color-recovery);
+  border: 1px solid var(--color-recovery-border);
+}
+
+.badge-risk {
+  background-color: var(--color-risk-bg);
+  color: var(--color-risk);
+  border: 1px solid var(--color-risk-border);
+}
+
+.badge-warning {
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning);
+  border: 1px solid var(--color-warning-border);
+}
+
+.badge-info {
+  background-color: var(--color-info-bg);
+  color: var(--color-info);
+  border: 1px solid var(--color-info-border);
+}
+
+.badge-muted {
+  background-color: var(--color-surface-2);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+/* Cards & Architectural Surfaces */
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 20px;
+  box-shadow: var(--shadow-subtle);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.card-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 4px;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.btn-gold {
+  background-color: var(--color-gold);
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.btn-gold:hover {
+  background-color: var(--color-gold-hover);
+}
+
+.btn-primary {
+  background-color: var(--color-text-primary);
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background-color: #333333;
+}
+
+.btn-secondary {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-surface-2);
+  border-color: var(--color-border-strong);
+}
+
+.btn-danger {
+  background-color: var(--color-risk-bg);
+  color: var(--color-risk);
+  border: 1px solid var(--color-risk-border);
+}
+
+.btn-danger:hover {
+  background-color: rgba(192, 57, 43, 0.15);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}

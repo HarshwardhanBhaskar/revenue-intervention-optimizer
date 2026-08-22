@@ -1,0 +1,34 @@
+{
+  "dataset": "held-out-test-set",
+  "sample_size": 538,
+  "revenue_at_risk": 4238170.0,
+  "control_baseline": {
+    "policy": "retry_once",
+    "recovery_rate": 0.552,
+    "gross_recovered": 2373270.0,
+    "total_cost": 5380.0,
+    "net_recovered": 2367890.0
+  },
+  "treatment_ai": {
+    "policy": "t_learner_economic_optimization",
+    "recovery_rate": 0.6004,
+    "gross_recovered": 2771310.0,
+    "total_cost": 32597.5,
+    "net_recovered": 2738712.5,
+    "action_distribution": {
+      "discount": 155,
+      "payment_link": 139,
+      "retry": 126,
+      "reminder": 90,
+      "do_nothing": 28
+    },
+    "do_nothing_rate": 0.052
+  },
+  "incremental_impact": {
+    "incremental_gross_revenue": 398040.0,
+    "incremental_net_revenue": 370822.5,
+    "percentage_uplift": 15.66,
+    "ci_95_lower": 56018.537500000006,
+    "ci_95_upper": 668188.8874999998
+  }
+}

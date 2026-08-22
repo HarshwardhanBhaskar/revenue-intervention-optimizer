@@ -1,0 +1,71 @@
+{
+  "version": "1.0.0",
+  "feature_columns": [
+    "amount_log",
+    "amount_normalized",
+    "hour_of_day",
+    "day_of_week",
+    "is_weekend",
+    "historical_orders",
+    "historical_success_rate",
+    "historical_recovery_rate",
+    "opted_out",
+    "has_active_dispute",
+    "segment_premium",
+    "segment_loyal",
+    "segment_regular",
+    "segment_price_sensitive",
+    "segment_new",
+    "reason_insufficient_funds",
+    "reason_network_error",
+    "reason_authentication_failed",
+    "reason_card_expired",
+    "reason_bank_declined",
+    "reason_timeout",
+    "method_upi",
+    "method_credit_card",
+    "method_debit_card",
+    "method_netbanking",
+    "retry_count"
+  ],
+  "actions": [
+    "do_nothing",
+    "retry",
+    "payment_link",
+    "reminder",
+    "discount"
+  ],
+  "metrics": {
+    "do_nothing": {
+      "val_auc": 0.5255,
+      "val_brier": 0.2603,
+      "val_log_loss": 0.7191,
+      "train_samples": 609
+    },
+    "retry": {
+      "val_auc": 0.7679,
+      "val_brier": 0.1974,
+      "val_log_loss": 0.5729,
+      "train_samples": 1559
+    },
+    "payment_link": {
+      "val_auc": 0.7344,
+      "val_brier": 0.206,
+      "val_log_loss": 0.5943,
+      "train_samples": 741
+    },
+    "reminder": {
+      "val_auc": 0.8237,
+      "val_brier": 0.1831,
+      "val_log_loss": 0.5472,
+      "train_samples": 572
+    },
+    "discount": {
+      "val_auc": 0.6981,
+      "val_brier": 0.2303,
+      "val_log_loss": 0.6635,
+      "train_samples": 407
+    }
+  },
+  "algorithm": "CalibratedClassifierCV(GradientBoostingClassifier, method='isotonic')"
+}

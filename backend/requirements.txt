@@ -1,0 +1,31 @@
+# Backend requirements
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+pydantic-settings==2.7.1
+sqlalchemy[asyncio]==2.0.36
+asyncpg==0.30.0
+psycopg2-binary==2.9.10
+alembic==1.14.1
+structlog==24.4.0
+python-jose[cryptography]==3.3.0
+slowapi==0.1.9
+httpx==0.28.1
+python-dotenv==1.0.1
+
+# ML (for model loading in backend)
+scikit-learn==1.6.1
+numpy==2.2.2
+pandas==2.2.3
+joblib==1.4.2
+
+# Razorpay
+razorpay==1.4.2
+
+# LLM
+google-generativeai==0.8.4
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.25.2
+pytest-cov==6.0.0
