@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, ShieldCheck, Lock, Sparkles, Building2 } from 'lucide-react';
+import KeystoneLogo from '@/components/brand/KeystoneLogo';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -32,33 +33,9 @@ export default function LoginPage() {
           justifyContent: 'space-between',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '3px',
-              backgroundColor: 'var(--color-text-primary)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#F9F8F6',
-              fontWeight: 700,
-              fontFamily: 'var(--font-serif)',
-              fontSize: '18px',
-            }}
-          >
-            R
-          </div>
-          <div>
-            <div style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--color-text-primary)' }}>
-              RIO Fintech
-            </div>
-            <div style={{ fontSize: '10px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono)' }}>
-              Revenue Intervention Optimizer
-            </div>
-          </div>
-        </div>
+        <Link href="/" style={{ textDecoration: 'none' }}>
+          <KeystoneLogo size={38} showText={true} textSize="md" />
+        </Link>
 
         <div style={{ maxWidth: '460px' }}>
           <span className="badge badge-gold" style={{ marginBottom: '14px' }}>

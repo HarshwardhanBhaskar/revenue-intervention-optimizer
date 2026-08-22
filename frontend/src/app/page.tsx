@@ -16,6 +16,7 @@ import {
   Building2,
   ChevronRight,
 } from 'lucide-react';
+import KeystoneLogo from '@/components/brand/KeystoneLogo';
 
 export default function LandingPage() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -118,31 +119,7 @@ export default function LandingPage() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '3px',
-              backgroundColor: 'var(--color-text-primary)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#F9F8F6',
-              fontWeight: 700,
-              fontFamily: 'var(--font-serif)',
-              fontSize: '18px',
-            }}
-          >
-            R
-          </div>
-          <div>
-            <div style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--color-text-primary)' }}>
-              Revenue Intervention Optimizer
-            </div>
-            <div style={{ fontSize: '10px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono)' }}>
-              Razorpay AI Buildathon • Track 03
-            </div>
-          </div>
+          <KeystoneLogo size={34} showText={true} />
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>

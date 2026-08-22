@@ -22,6 +22,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import AIAssistantModal from './AIAssistantModal';
+import KeystoneLogo from './brand/KeystoneLogo';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -69,41 +70,18 @@ export default function Layout({ children }: LayoutProps) {
         }}
       >
         {/* Brand Header */}
-        <div
+        <Link
+          href="/"
           style={{
-            padding: '20px 22px',
+            padding: '18px 20px',
             borderBottom: '1px solid var(--color-border)',
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
+            textDecoration: 'none',
           }}
         >
-          <div
-            style={{
-              width: '28px',
-              height: '28px',
-              borderRadius: '3px',
-              backgroundColor: 'var(--color-text-primary)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#F9F8F6',
-              fontWeight: 700,
-              fontFamily: 'var(--font-serif)',
-              fontSize: '16px',
-            }}
-          >
-            R
-          </div>
-          <div>
-            <div style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--color-text-primary)' }}>
-              RIO Fintech
-            </div>
-            <div style={{ fontSize: '10px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono)' }}>
-              Intervention Optimizer
-            </div>
-          </div>
-        </div>
+          <KeystoneLogo size={30} showText={true} />
+        </Link>
 
         {/* Navigation Section */}
         <nav style={{ flex: 1, padding: '16px 10px', overflowY: 'auto' }}>
