@@ -46,52 +46,70 @@ RIO enforces strict separation between **probabilistic ML inference** (T-Learner
 flowchart TB
     subgraph INGESTION ["1. Ingestion Layer"]
         RZP["Razorpay Webhook Engine\n(payment.failed)"] --> |HMAC-SHA256 Verified| WH["FastAPI Webhook Receiver\n(/api/webhooks/razorpay)"]
-        WH --> |Deduplicate Idempotency Key| IDEM{"Idempotency Filter\n(Redis/DB Cache)"}
+        WH --> |Deduplicate Idempotency Key| IDEM{"Idempotency Filter\n(Database Unique Key)"}
     end
 
     subgraph ENGINE ["2. Domain Intelligence Core"]
-        IDEM -->|New Unique Failure| FE["Feature Engineering Pipeline\n(RFM, Payment Vector, Risk)"]
-        FE --> T_LEARNER["T-Learner ML Uplift Engine\n(5 Calibrated Isotonic Models)"]
+        FE["Feature Engineering Pipeline\n(RFM, Payment Vector, Risk)"]
+        T_LEARNER["T-Learner ML Uplift Engine\n(5 Calibrated Isotonic Models)"]
         
-        subgraph MODELS ["T-Learner Estimators"]
-            M0["M0: DO_NOTHING"]
-            M1["M1: RETRY"]
-            M2["M2: PAYMENT_LINK"]
-            M3["M3: REMINDER"]
-            M4["M4: DISCOUNT"]
-        end
+        M0["M0: DO_NOTHING"]
+        M1["M1: RETRY"]
+        M2["M2: PAYMENT_LINK"]
+        M3["M3: REMINDER"]
+        M4["M4: DISCOUNT"]
         
+        FE --> T_LEARNER
         T_LEARNER --> M0 & M1 & M2 & M3 & M4
         M0 & M1 & M2 & M3 & M4 --> EVAL["Economic Value Function\nArgmax Net Incremental Paise"]
     end
 
+    IDEM -->|New Unique Failure| FE
+
     subgraph POLICY ["3. Deterministic Safety & Governance"]
-        EVAL --> POL["Deterministic Policy Engine\n(Merchant Rules & Margin Caps)"]
-        POL --> RISK["Risk Firewall\n(Opt-Outs & Dispute Circuit-Breaker)"]
-        RISK --> GATE{"Requires Human\nSign-Off?"}
-        
-        GATE -->|Amount >= ₹10,000| APPROVAL["Approval Queue\n(/approvals)"]
-        GATE -->|Within Auto Limits| DISPATCH["Idempotent Dispatcher"]
+        POL["Deterministic Policy Engine\n(Merchant Rules & Margin Caps)"]
+        RISK["Risk Firewall\n(Opt-Outs & Dispute Circuit-Breaker)"]
+        GATE{"Requires Human\nSign-Off?"}
+        APPROVAL["Approval Queue\n(/approvals)"]
+        DISPATCH["Idempotent Dispatcher"]
+        BLOCKED["Workflow State: BLOCKED"]
+
+        POL --> RISK
+        RISK --> GATE
+        GATE -->|Amount >= ₹10,000| APPROVAL
+        GATE -->|Within Auto Limits| DISPATCH
         APPROVAL -->|Merchant Approved| DISPATCH
-        APPROVAL -->|Operator Rejected| BLOCKED["Workflow State: BLOCKED"]
+        APPROVAL -->|Operator Rejected| BLOCKED
     end
+
+    EVAL --> POL
 
     subgraph DISPATCH_LAYER ["4. Execution & Observability"]
-        DISPATCH --> RZP_API["Razorpay Integration Client\n(Payment Links / Instant Refunds)"]
-        DISPATCH --> NOTIF["Omnichannel Notification Service\n(Email / SMS / WhatsApp)"]
+        RZP_API["Razorpay Integration Client\n(Payment Links / Routing)"]
+        NOTIF["Omnichannel Notification Service\n(Email / SMS / WhatsApp)"]
+        AUDIT["Immutable Event Log Stream\n(Append-Only Audit Engine)"]
+        SUPABASE[("Supabase PostgreSQL\n(Managed DB Cluster)")]
         
-        DISPATCH_LAYER --> AUDIT["Immutable Event Log Stream\n(Append-Only Audit Engine)"]
-        AUDIT --> SUPABASE[("Supabase PostgreSQL\n(Managed DB Cluster)")]
+        RZP_API --> AUDIT
+        NOTIF --> AUDIT
+        AUDIT --> SUPABASE
     end
 
+    DISPATCH --> RZP_API
+    DISPATCH --> NOTIF
+
     subgraph UI ["5. Financial Operator Interface (Next.js 14)"]
-        SUPABASE <--> NEXT["Next.js 14 App Router\n(Warm Alabaster / Restrained Gold)"]
-        NEXT --> V1["/overview - Financial Control Center"]
-        NEXT --> V2["/recovery - Opportunities Ledger"]
-        NEXT --> V3["/decision-lab - Counterfactual Simulator"]
-        NEXT --> V4["/experiments - A/B Uplift Benchmark"]
-        NEXT --> V5["/analyst - Grounded AI Assistant"]
+        NEXT["Next.js 14 App Router\n(Financial Editorial Interface)"]
+        V1["/overview - Control Center"]
+        V2["/recovery - Opportunities Ledger"]
+        V3["/decision-lab - Counterfactual Simulator"]
+        V4["/experiments - A/B Uplift Benchmark"]
+        V5["/analyst - Grounded AI Assistant"]
+        
+        NEXT --> V1 & V2 & V3 & V4 & V5
     end
+
+    SUPABASE <--> NEXT
 ```
 
 ---
