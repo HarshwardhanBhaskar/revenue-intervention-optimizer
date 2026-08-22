@@ -9,6 +9,8 @@ from contextlib import asynccontextmanager
 from config import get_settings
 from api import dashboard, opportunities, actions, experiments, policies, audit, assistant, webhooks
 from middleware.request_id import RequestIdMiddleware
+from middleware.rate_limit import RateLimitMiddleware
+from middleware.security_headers import SecurityHeadersMiddleware
 from utils.logging import setup_logging
 
 
@@ -39,6 +41,16 @@ def create_app() -> FastAPI:
         redoc_url="/redoc" if settings.is_development else None,
     )
 
+    # Security Headers Middleware
+    app.add_middleware(SecurityHeadersMiddleware)
+
+    # Rate Limiting & DoS Protection Middleware (120 req/min, 1MB max payload)
+    app.add_middleware(
+        RateLimitMiddleware,
+        requests_per_minute=settings.rate_limit_per_minute * 2,
+        max_content_length=1_048_576,
+    )
+
     # CORS
     app.add_middleware(
         CORSMiddleware,
@@ -48,7 +60,7 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # Custom middleware
+    # Request Tracing Middleware
     app.add_middleware(RequestIdMiddleware)
 
     # API routes

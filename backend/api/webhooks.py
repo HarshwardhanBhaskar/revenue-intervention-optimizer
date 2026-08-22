@@ -39,12 +39,15 @@ async def handle_razorpay_webhook(request: Request, db: AsyncSession = Depends(g
     raw_body = await request.body()
     signature = request.headers.get("X-Razorpay-Signature", "")
 
-    # 1. Signature Verification (Skip if simulated webhook in dev with header X-Simulated)
+    # 1. Signature Verification (Skip ONLY if simulated webhook with header X-Simulated: true)
     is_simulated = request.headers.get("X-Simulated") == "true"
-    if not is_simulated and rzp_client.is_test_configured:
+    if not is_simulated:
+        if not signature:
+            logger.warning("webhook.missing_signature")
+            raise HTTPException(status_code=400, detail="Missing signature header (X-Razorpay-Signature)")
         if not rzp_client.verify_webhook_signature(raw_body, signature):
             logger.warning("webhook.invalid_signature", signature=signature[:20] if signature else "none")
-            raise HTTPException(status_code=401, detail="Invalid webhook signature")
+            raise HTTPException(status_code=400, detail="Invalid webhook signature")
 
     try:
         payload = await request.json()
