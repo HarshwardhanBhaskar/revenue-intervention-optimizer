@@ -59,25 +59,51 @@ class FeatureEngineer:
         df_feat = pd.DataFrame(index=merged.index)
 
         # Monetary features
-        amount = merged["amount"].astype(float)
+        if "amount" in merged.columns:
+            amount = merged["amount"].astype(float)
+        elif "amount_paise" in merged.columns:
+            amount = merged["amount_paise"].astype(float) / 100.0
+        else:
+            amount = pd.Series([1000.0] * len(merged), index=merged.index)
+
         df_feat["amount_log"] = np.log1p(amount)
         df_feat["amount_normalized"] = (amount - 200.0) / (50000.0 - 200.0)
 
         # Time features
-        df_feat["hour_of_day"] = merged["hour_of_day"].astype(int)
-        df_feat["day_of_week"] = merged["day_of_week"].astype(int)
-        df_feat["is_weekend"] = (merged["day_of_week"] >= 5).astype(int)
+        if "hour_of_day" in merged.columns:
+            df_feat["hour_of_day"] = merged["hour_of_day"].fillna(12).astype(int)
+        elif "created_at" in merged.columns:
+            df_feat["hour_of_day"] = pd.to_datetime(merged["created_at"]).dt.hour.fillna(12).astype(int)
+        else:
+            df_feat["hour_of_day"] = 12
+
+        if "day_of_week" in merged.columns:
+            df_feat["day_of_week"] = merged["day_of_week"].fillna(1).astype(int)
+        elif "created_at" in merged.columns:
+            df_feat["day_of_week"] = pd.to_datetime(merged["created_at"]).dt.dayofweek.fillna(1).astype(int)
+        else:
+            df_feat["day_of_week"] = 1
+
+        df_feat["is_weekend"] = (df_feat["day_of_week"] >= 5).astype(int)
 
         # Customer behavior
-        df_feat["historical_orders"] = merged["historical_orders"].fillna(0).astype(int)
-        df_feat["historical_success_rate"] = merged["success_rate"].fillna(0.7).astype(float)
-        df_feat["historical_recovery_rate"] = merged["historical_recovery_rate"].fillna(0.3).astype(float)
-        df_feat["opted_out"] = merged["opted_out"].fillna(False).astype(int)
-        df_feat["has_active_dispute"] = merged["has_active_dispute"].fillna(False).astype(int)
+        df_feat["historical_orders"] = merged.get("historical_orders", pd.Series([0]*len(merged))).fillna(0).astype(int)
+        
+        if "success_rate" in merged.columns:
+            df_feat["historical_success_rate"] = merged["success_rate"].fillna(0.7).astype(float)
+        elif "successful_payments" in merged.columns and "historical_orders" in merged.columns:
+            df_feat["historical_success_rate"] = (merged["successful_payments"] / merged["historical_orders"].replace(0, 1)).fillna(0.7).astype(float)
+        else:
+            df_feat["historical_success_rate"] = 0.7
+
+        df_feat["historical_recovery_rate"] = merged.get("historical_recovery_rate", pd.Series([0.3]*len(merged))).fillna(0.3).astype(float)
+        df_feat["opted_out"] = merged.get("opted_out", pd.Series([False]*len(merged))).fillna(False).astype(int)
+        df_feat["has_active_dispute"] = merged.get("has_active_dispute", pd.Series([False]*len(merged))).fillna(False).astype(int)
 
         # Segments
+        seg_col = merged.get("segment", pd.Series(["regular"]*len(merged)))
         for seg in ["premium", "loyal", "regular", "price_sensitive", "new"]:
-            df_feat[f"segment_{seg}"] = (merged["segment"] == seg).astype(int)
+            df_feat[f"segment_{seg}"] = (seg_col == seg).astype(int)
 
         # Failure reasons
         for reason in [
