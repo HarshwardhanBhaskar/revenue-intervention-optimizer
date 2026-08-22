@@ -20,13 +20,15 @@ Standard classification models estimate $P(Y=1 \mid X)$, which answers *"Will th
 
 RIO uses a **T-Learner (Treatment Learner)** uplift meta-algorithm. We train 5 distinct, well-calibrated Gradient Boosting estimators:
 
-$$\mu_0(X) = P(Y=1 \mid X, W=\text{do\_nothing})$$
+$$\mu_0(X) = P(Y=1 \mid X, W=\text{do-nothing})$$
 $$\mu_1(X) = P(Y=1 \mid X, W=\text{retry})$$
-$$\mu_2(X) = P(Y=1 \mid X, W=\text{payment\_link})$$
+$$\mu_2(X) = P(Y=1 \mid X, W=\text{payment-link})$$
 $$\mu_3(X) = P(Y=1 \mid X, W=\text{reminder})$$
 $$\mu_4(X) = P(Y=1 \mid X, W=\text{discount})$$
 
 ### Conditional Average Treatment Effect (CATE)
+The incremental uplift $\tau_a(X)$ of action $a$ over doing nothing is:
+
 $$\tau_a(X) = \mu_a(X) - \mu_0(X)$$
 
 ### Probability Calibration
@@ -34,21 +36,22 @@ Raw Gradient Boosting Classifiers output uncalibrated scores. We wrap each sub-m
 
 ---
 
-## 3. Mathematical Economic Value Function
+## 3. Net Value Formulation
 
-For any candidate action $a \in \{\text{do\_nothing}, \text{retry}, \text{payment\_link}, \text{reminder}, \text{discount}\}$:
+For any candidate action $a \in \{\text{do-nothing}, \text{retry}, \text{payment-link}, \text{reminder}, \text{discount}\}$:
 
 $$\mathbb{E}[\text{NetValue}(a)] = \mu_a(X) \times \text{Amount} - \text{Cost}(a) - \text{DiscountCost}(a, X)$$
 
-Where:
-- $\text{Cost}(\text{do\_nothing}) = 0$
-- $\text{Cost}(\text{retry}) = \text{₹10 (network gateway fee)}$
-- $\text{Cost}(\text{payment\_link}) = \text{₹20 (gateway link creation)}$
-- $\text{Cost}(\text{reminder}) = \text{₹5 (SMS / WhatsApp notification cost)}$
+Where costs are defined in integer paise:
+- $\text{Cost}(\text{do-nothing}) = 0$
+- $\text{Cost}(\text{retry}) = \text{₹10 (direct routing API cost)}$
+- $\text{Cost}(\text{payment-link}) = \text{₹20 (gateway link creation)}$
+- $\text{Cost}(\text{reminder}) = \text{₹5 (SMS/WhatsApp delivery)}$
 - $\text{Cost}(\text{discount}) = \text{₹20} + (\mu_{\text{discount}}(X) \times \text{Amount} \times \text{DiscountRate})$
 
-### The Incremental Decision Rule
-$$\text{IncrementalNetValue}(a) = \mathbb{E}[\text{NetValue}(a)] - \mathbb{E}[\text{NetValue}(\text{do\_nothing})]$$
+The **Expected Incremental Value** is:
+
+$$\text{IncrementalNetValue}(a) = \mathbb{E}[\text{NetValue}(a)] - \mathbb{E}[\text{NetValue}(\text{do-nothing})]$$
 
 $$a^* = \arg\max_{a} \text{IncrementalNetValue}(a)$$
 

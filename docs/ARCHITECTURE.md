@@ -68,7 +68,7 @@ erDiagram
 | Component | Responsibility | Authority Level | Technology |
 |---|---|---|---|
 | **T-Learner ML Models** | Estimate conditional recovery probabilities per action: $P(\text{Recovery} \mid X, a)$ | Advisory Only | Scikit-Learn `CalibratedClassifierCV` |
-| **Economic Decision Engine** | Calculate net values and rank actions: $\text{Argmax} [E[\text{Net}\mid a] - E[\text{Net}\mid \text{DO\_NOTHING}]]$ | Recommendation | Python Domain Service |
+| **Economic Decision Engine** | Calculate net values and rank actions: $\text{Argmax} [\mathbb{E}[\text{Net} \mid a] - \mathbb{E}[\text{Net} \mid \text{do-nothing}]]$ | Recommendation | Python Domain Service |
 | **Risk Firewall** | Pre-policy circuit breaker (fraud, missing models, race guards) | Deterministic Hard Gate | Python Domain Service |
 | **Policy Engine** | Business rules enforcement (₹10k threshold, 5% max discount, opt-out, disputes) | Deterministic Authoritative | Python Domain Service |
 | **State Machine** | Validates legal transitions (`DETECTED` $\to$ `ANALYZING` $\to \dots \to$ `RECOVERED`) | State Authority | Python Enum & Guard Rules |

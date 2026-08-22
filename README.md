@@ -130,11 +130,11 @@ stateDiagram-v2
 ## Machine Learning & Causal Uplift Formulation
 
 ### Why Uplift Modeling (T-Learner) Over Standard Churn/Recovery Classification
-Standard binary classifiers predict $P(\text{Recovery} | X)$, which answers *"Will this customer pay?"* but fails to answer *"Will our intervention **cause** this customer to pay who wouldn't have paid otherwise?"*
+Standard binary classifiers predict $P(\text{Recovery} \mid X)$, which answers *"Will this customer pay?"* but fails to answer *"Will our intervention **cause** this customer to pay who wouldn't have paid otherwise?"*
 
 RIO implements a **T-Learner meta-algorithm** consisting of 5 independent gradient boosted estimators calibrated with **Isotonic Regression**:
 
-$$\mu_a(x) = \mathbb{E}[Y | X = x, T = a], \quad \forall a \in \{\text{do\_nothing}, \text{retry}, \text{payment\_link}, \text{reminder}, \text{discount}\}$$
+$$\mu_a(x) = \mathbb{E}[Y \mid X = x, T = a], \quad \forall a \in \{\text{do-nothing}, \text{retry}, \text{payment-link}, \text{reminder}, \text{discount}\}$$
 
 The **Conditional Average Treatment Effect (CATE)** of action $a$ relative to organic baseline is:
 

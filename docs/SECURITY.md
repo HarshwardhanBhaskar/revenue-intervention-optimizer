@@ -13,7 +13,7 @@ The web frontend is treated as an untrusted presentation layer:
 
 1. **HMAC-SHA256 Signature Verification**:
    - Every incoming Razorpay webhook payload is validated against the merchant's secret key:
-     $$\text{Signature} = \text{HMAC-SHA256}(\text{raw\_body}, \text{secret})$$
+     $$\text{Signature} = \text{HMAC-SHA256}(\text{raw-payload}, \text{secret})$$
    - Invalid signatures are rejected with HTTP 400 immediately.
 
 2. **Event Deduplication (Idempotency Ledger)**:
