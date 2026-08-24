@@ -10,20 +10,20 @@ services:
       - key: APP_ENV
         value: production
       - key: DATABASE_URL
-        value: postgresql+asyncpg://postgres.hctvyazovhjyajqohmto:Harsh%40wardhan987@aws-0-ap-south-1.pooler.supabase.com:6543/postgres
+        sync: false
       - key: DATABASE_SYNC_URL
-        value: postgresql://postgres.hctvyazovhjyajqohmto:Harsh%40wardhan987@aws-0-ap-south-1.pooler.supabase.com:6543/postgres
+        sync: false
       - key: SUPABASE_URL
-        value: https://hctvyazovhjyajqohmto.supabase.co
+        sync: false
       - key: SUPABASE_ANON_KEY
-        value: sb_publishable_VUGUEoOapv686UqbZ6joFw_-Uoq5IaB
+        sync: false
       - key: RAZORPAY_KEY_ID
-        value: rzp_test_1DP5mmOlF5G5ag
+        value: rzp_test_placeholder
       - key: RAZORPAY_KEY_SECRET
-        value: placeholder_secret
+        sync: false
       - key: RAZORPAY_WEBHOOK_SECRET
-        value: rio_whsec_test_live_sandbox_99
+        sync: false
       - key: JWT_SECRET_KEY
-        value: rio-fintech-jwt-secret-key-buildathon-2026
+        sync: false
       - key: MODEL_DIR
         value: ../ml/models
