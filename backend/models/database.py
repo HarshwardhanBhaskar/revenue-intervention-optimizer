@@ -6,8 +6,12 @@ Uses SQLAlchemy 2.0 async engine for FastAPI compatibility.
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.pool import NullPool
 from sqlalchemy import create_engine
+import logging
 from config import get_settings
+
+logger = logging.getLogger("rio.database")
 
 
 class Base(DeclarativeBase):
@@ -27,23 +31,30 @@ def get_async_engine():
     global _async_engine
     if _async_engine is None:
         settings = get_settings()
-        connect_args = {}
-        if "postgresql" in settings.database_url:
+        db_url = settings.database_url
+        
+        # Normalize URL for asyncpg
+        if db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql+asyncpg://", 1)
+        elif db_url.startswith("postgresql://") and "+asyncpg" not in db_url:
+            db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
+        if "postgresql" in db_url:
+            # When connecting via PgBouncer / Supavisor transaction mode,
+            # statement caching must be disabled and NullPool avoids connection state issues
             connect_args = {
                 "statement_cache_size": 0,
                 "prepared_statement_cache_size": 0,
             }
             _async_engine = create_async_engine(
-                settings.database_url,
+                db_url,
                 echo=False,
-                pool_size=10,
-                max_overflow=20,
-                pool_pre_ping=True,
+                poolclass=NullPool,
                 connect_args=connect_args,
             )
         else:
             _async_engine = create_async_engine(
-                settings.database_url,
+                db_url,
                 echo=False,
             )
     return _async_engine
@@ -53,16 +64,20 @@ def get_sync_engine():
     global _sync_engine
     if _sync_engine is None:
         settings = get_settings()
-        if "postgresql" in settings.database_sync_url:
+        db_url = settings.database_sync_url
+        if db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+        if "postgresql" in db_url:
             _sync_engine = create_engine(
-                settings.database_sync_url,
+                db_url,
                 echo=False,
                 pool_size=5,
                 pool_pre_ping=True,
             )
         else:
             _sync_engine = create_engine(
-                settings.database_sync_url,
+                db_url,
                 echo=False,
             )
     return _sync_engine
@@ -95,11 +110,18 @@ async def get_db() -> AsyncSession:
 
 async def init_db():
     """Create all tables. Called on startup."""
-    engine = get_async_engine()
-    async with engine.begin() as conn:
-        # Import all models so they're registered with Base
-        from models import customer, order, payment, recovery_opportunity  # noqa
-        from models import recovery_action, recovery_outcome, policy  # noqa
-        from models import approval, audit_event, experiment, model_prediction  # noqa
-        from models import merchant, payment_event  # noqa
-        await conn.run_sync(Base.metadata.create_all)
+    try:
+        engine = get_async_engine()
+        async with engine.begin() as conn:
+            # Import all models so they're registered with Base
+            from models import customer, order, payment, recovery_opportunity  # noqa
+            from models import recovery_action, recovery_outcome, policy  # noqa
+            from models import approval, audit_event, experiment, model_prediction  # noqa
+            from models import merchant, payment_event  # noqa
+            await conn.run_sync(Base.metadata.create_all)
+            logger.info("Database schema initialized successfully")
+    except Exception as e:
+        logger.warning(
+            f"Database init_db warning (tables may already exist or running behind PgBouncer): {e}"
+        )
+
